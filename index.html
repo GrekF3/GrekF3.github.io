@@ -15,57 +15,25 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-    }
-
-    .message {
       text-align: center;
     }
 
-    .message h1 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .message p {
-      font-size: 1rem;
-      color: #aaa;
-    }
-
-    .message a {
+    a {
       color: #fff;
+      font-size: 1.2rem;
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="message">
-    <h1>Открываем Instagram...</h1>
-    <p>Если ничего не произошло, <a href="https://instagram.com/your_username">нажмите здесь</a>.</p>
+  <div>
+    <h1>Переход в Instagram</h1>
+    <p>Если ничего не произошло, нажмите ниже:</p>
+    <a href="https://instagram.com/_u/your_username">Открыть в Instagram</a>
   </div>
 
   <script>
-    (function redirectToInstagramApp() {
-      const username = "your_username"; // ЗАМЕНИТЬ на актуальный ник
-      const appUrl = `instagram://user?username=${username}`;
-      const fallbackUrl = `https://instagram.com/${username}`;
-      const timeout = 1200;
-
-      let hidden = false;
-
-      // Попытка открыть приложение
-      const now = Date.now();
-      const iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      iframe.src = appUrl;
-      document.body.appendChild(iframe);
-
-      // Если через ~1.2 секунды пользователь не покинул страницу — редиректим
-      setTimeout(() => {
-        if (Date.now() - now < timeout + 100) {
-          window.location.href = fallbackUrl;
-        }
-      }, timeout);
-    })();
+    window.location.href = "https://instagram.com/_u/your_username";
   </script>
 </body>
 </html>
