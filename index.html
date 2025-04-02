@@ -1,16 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Redirecting...</title>
-  <meta http-equiv="refresh" content="0;url=https://instagram.com/your_username" />
-  <script>
-    window.onload = function () {
-      const instagramUrl = "https://instagram.com/your_username";
-      window.location.replace(instagramUrl);
-    };
-  </script>
+  <title>Переход в Instagram...</title>
   <style>
     body {
       margin: 0;
@@ -37,12 +30,42 @@
       font-size: 1rem;
       color: #aaa;
     }
+
+    .message a {
+      color: #fff;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
   <div class="message">
-    <h1>Переход на Instagram...</h1>
-    <p>Если вы не были перенаправлены, нажмите <a href="https://instagram.com/your_username" style="color: #fff;">здесь</a>.</p>
+    <h1>Открываем Instagram...</h1>
+    <p>Если ничего не произошло, <a href="https://instagram.com/your_username">нажмите здесь</a>.</p>
   </div>
+
+  <script>
+    (function redirectToInstagramApp() {
+      const username = "your_username"; // ЗАМЕНИТЬ на актуальный ник
+      const appUrl = `instagram://user?username=${username}`;
+      const fallbackUrl = `https://instagram.com/${username}`;
+      const timeout = 1200;
+
+      let hidden = false;
+
+      // Попытка открыть приложение
+      const now = Date.now();
+      const iframe = document.createElement("iframe");
+      iframe.style.display = "none";
+      iframe.src = appUrl;
+      document.body.appendChild(iframe);
+
+      // Если через ~1.2 секунды пользователь не покинул страницу — редиректим
+      setTimeout(() => {
+        if (Date.now() - now < timeout + 100) {
+          window.location.href = fallbackUrl;
+        }
+      }, timeout);
+    })();
+  </script>
 </body>
 </html>
