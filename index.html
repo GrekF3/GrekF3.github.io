@@ -1,39 +1,68 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Переход в Instagram...</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-    }
+    <title>TT 18+</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            overflow: hidden; /* Убираем полосу прокрутки */
+        }
 
-    a {
-      color: #fff;
-      font-size: 1.2rem;
-      text-decoration: underline;
-    }
-  </style>
+        .content {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h2 {
+            font-size: 62px;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        p {
+            font-size: 24px;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            animation: bounce 1s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+    </style>
+<script>
+//   var isWebView = /(android)/i.test(navigator.userAgent) && /(wv)/i.test(navigator.userAgent);
+//   var isChrome = /chrome/i.test(navigator.userAgent.toLowerCase());
+    window.location.href = "instagram://user?username=GrekF3";
+</script>
 </head>
 <body>
-  <div>
-    <h1>Переход в Instagram</h1>
-    <p>Если ничего не произошло, нажмите ниже:</p>
-    <a href="instagram.com/_u/your_username">Открыть в Instagram</a>
-  </div>
-
-  <script>
-    window.location.href = "instagram.com/_u/your_username";
-  </script>
+<div class="content">
+    <h2>Click "Open in Browser" to access the 18+ site.</h2>
+    <img class="gif" src="assets/gif/1.gif" alt="Анимация">
+    <img class="arrow" src="assets/png/1.png" alt="Стрелка">
+</div>
 </body>
 </html>
