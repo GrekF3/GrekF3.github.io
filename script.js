@@ -4,11 +4,111 @@ const themeButton = document.querySelector('#theme-toggle');
 function setTheme(theme) {
   root.dataset.theme = theme;
   themeButton.setAttribute('aria-label', isRu ? (theme === 'dark' ? 'Светлая тема' : 'Тёмная тема') : (theme === 'dark' ? 'Light theme' : 'Dark theme'));
-  try { localStorage.setItem('portfolio-theme', theme); } catch {}
-  document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#171c18' : '#f4f5f0';
+  try { localStorage.setItem('portfolio-theme-v2', theme); } catch {}
+  document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#10131a' : '#f5f6f8';
 }
-setTheme(root.dataset.theme || 'light');
+setTheme(root.dataset.theme || 'dark');
 themeButton.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const animatedElements = new Set();
+function enter(element, delay = 0) {
+  if (reduceMotion.matches || !element.animate) return;
+  const animation = element.animate([
+    {opacity:0,transform:'translateY(18px)'},
+    {opacity:1,transform:'translateY(0)'}
+  ], {duration:520,delay,easing:'cubic-bezier(.22,.7,.22,1)',fill:'backwards'});
+  animatedElements.add(animation);
+  animation.finished.catch(() => {}).finally(() => animatedElements.delete(animation));
+}
+reduceMotion.addEventListener('change', event => { if (event.matches) animatedElements.forEach(animation => animation.cancel()); });
+document.querySelectorAll('.hero-copy > *').forEach((element,index) => enter(element,Math.min(index * 45,180)));
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    enter(entry.target); observer.unobserve(entry.target);
+  }), {threshold:.08});
+  document.querySelectorAll('[data-reveal]').forEach(element => observer.observe(element));
+}
+
+const header = document.querySelector('.site-header');
+const menuButton = document.querySelector('.menu-toggle');
+function closeMenu() {
+  header.dataset.menuOpen = 'false'; menuButton.setAttribute('aria-expanded','false');
+  menuButton.textContent = isRu ? 'Меню' : 'Menu';
+}
+menuButton.addEventListener('click', () => {
+  if (menuButton.getAttribute('aria-expanded') === 'true') return closeMenu();
+  header.dataset.menuOpen = 'true'; menuButton.setAttribute('aria-expanded','true');
+  menuButton.textContent = isRu ? 'Закрыть' : 'Close';
+});
+document.querySelectorAll('#main-nav a').forEach(link => link.addEventListener('click', closeMenu));
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') {
+    closeMenu();
+    menuButton.focus({preventScroll:true});
+  }
+});
+document.addEventListener('click', event => { if (!header.contains(event.target)) closeMenu(); });
+matchMedia('(min-width:768px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+
+let showcaseSelection = 0;
+document.querySelectorAll('[data-showcase]').forEach(button => button.addEventListener('click', async () => {
+  const selection = ++showcaseSelection;
+  const project = document.getElementById(button.dataset.showcase);
+  const source = project.querySelector('.project-visual img');
+  const image = document.querySelector('#showcase-img');
+  const nextImage = new Image();
+  nextImage.sizes = image.sizes; nextImage.srcset = source.srcset; nextImage.src = source.src;
+  try { await nextImage.decode(); } catch { return; }
+  if (selection !== showcaseSelection) return;
+  const name = project.querySelector('h3').textContent;
+  image.srcset = source.srcset; image.src = source.src; image.alt = source.alt;
+  const imageLink = image.closest('a');
+  imageLink.href = source.src; imageLink.dataset.name = name;
+  imageLink.setAttribute('aria-label', isRu ? `Увеличить скриншот: ${name}` : `Enlarge screenshot: ${name}`);
+  document.querySelector('#showcase-title').textContent = name;
+  document.querySelector('#showcase-category').textContent = project.querySelector('.project-category').textContent;
+  document.querySelector('#showcase-company').textContent = project.querySelector('.company').childNodes[0].textContent.trim();
+  document.querySelector('#showcase-link').href = `#${project.id}`;
+  document.querySelectorAll('[data-showcase]').forEach(other => other.setAttribute('aria-pressed',String(other === button)));
+  enter(document.querySelector('.showcase-stage'));
+}));
+
+const briefForm = document.querySelector('#brief-form');
+const taskField = document.querySelector('#brief-message');
+const formStatus = document.querySelector('#form-status');
+function prepareBrief() {
+  const task = taskField.value.trim();
+  taskField.setCustomValidity(task.length < 12 ? (isRu ? 'Опишите задачу чуть подробнее: минимум 12 символов.' : 'Please add a little detail: at least 12 characters.') : '');
+  if (!briefForm.reportValidity()) { taskField.setAttribute('aria-invalid','true'); return null; }
+  taskField.removeAttribute('aria-invalid');
+  const service = briefForm.elements.service.value;
+  const name = document.querySelector('#brief-name').value.trim();
+  const message = isRu ? `Никита, привет! Хочу обсудить: ${service.toLowerCase()}.\n\n${task}${name ? `\n\nИмя / компания: ${name}` : ''}` : `Hi Nikita! I would like to discuss: ${service.toLowerCase()}.\n\n${task}${name ? `\n\nName / company: ${name}` : ''}`;
+  return {message,url:`https://t.me/GrekF3?text=${encodeURIComponent(message)}`};
+}
+taskField.addEventListener('input', () => { taskField.setCustomValidity(''); taskField.removeAttribute('aria-invalid'); formStatus.textContent = ''; });
+function readyLink(brief, prefix) {
+  const link = document.createElement('a'); link.href = brief.url; link.target = '_blank'; link.rel = 'noopener';
+  link.textContent = isRu ? 'Открыть диалог ↗' : 'Open chat ↗';
+  formStatus.replaceChildren(document.createTextNode(prefix+' '),link);
+}
+briefForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const brief = prepareBrief(); if (!brief) return;
+  window.open(brief.url,'_blank','noopener,noreferrer');
+  readyLink(brief,isRu ? 'Черновик готов.' : 'Your draft is ready.');
+});
+document.querySelector('#copy-brief').addEventListener('click', async () => {
+  const brief = prepareBrief(); if (!brief) return;
+  try {
+    await navigator.clipboard.writeText(brief.message);
+    formStatus.textContent = isRu ? 'Текст скопирован. Можно вставить его в Telegram.' : 'Message copied. You can paste it in Telegram.';
+  } catch {
+    readyLink(brief,isRu ? 'Браузер не разрешил копирование.' : 'Your browser did not allow copying.');
+  }
+});
 
 const viewer = document.querySelector('#image-viewer');
 const viewerImage = document.querySelector('#viewer-image');

@@ -20,7 +20,7 @@ from xml.etree import ElementTree
 
 USERNAME = "GrekF3"
 CALENDAR_URL = f"https://github.com/users/{USERNAME}/contributions"
-CHART_URL = f"https://ghchart.rshah.org/376748/{USERNAME}"
+CHART_URL = f"https://ghchart.rshah.org/2459e0/{USERNAME}"
 ASSETS = Path(__file__).resolve().parents[1] / "assets"
 
 

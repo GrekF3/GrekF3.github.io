@@ -1,1 +1,26 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Страница не найдена | Никита Петров</title><link rel="stylesheet" href="/styles.css"></head><body><main class="shell hero"><p class="role">404</p><h1>Страница не найдена</h1><p>Page not found.</p><a class="button primary" href="/">В портфолио / Portfolio ↗</a></main></body></html>
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#10131a">
+  <title>Страница не найдена / Page not found | Никита Петров</title>
+  <link rel="icon" href="/assets/favicon.png">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .error-page { min-height: 100dvh; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: var(--space-24); padding-block: var(--space-48); max-width: 56rem; }
+    .error-page h1 { max-width: 48rem; font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.15; }
+    .error-page .error-copy { color: var(--muted); max-width: 36rem; font-size: clamp(1rem, 2vw, 1.1875rem); }
+    .error-page .button { max-width: 100%; }
+  </style>
+</head>
+<body>
+  <main class="shell error-page">
+    <p class="role">404</p>
+    <h1>Страница не найдена</h1>
+    <p class="error-copy" lang="en">Page not found. You can return to the portfolio.</p>
+    <a class="button primary" href="/"><span>На главную / <span lang="en">Home</span></span><span aria-hidden="true">↗</span></a>
+  </main>
+</body>
+</html>
