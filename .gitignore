@@ -1,2 +1,4 @@
 .playwright-cli/
 portfolio-*.png
+_site/
+__pycache__/
